@@ -47,8 +47,11 @@ def checkSeeds():
 
 # get the node with the highest block height
 def get_highest_node():
-    nodes_data = blockchain_db['meta'].find_one({"name":"node_status"})["nodes"]
-    return sorted([x for x in nodes_data if x["block_height"] != None], key=lambda x: (x["block_height"], -1*x["time"]), reverse=True)[0]["url"]
+    data = blockchain_db['meta'].find_one({"name":"node_status"})["nodes"]
+    nodes = sorted([x for x in nodes_data if x["block_height"] != None], key=lambda x: (x["block_height"], -1*x["time"]), reverse=True)
+    if len(nodes) == 0:
+        return nodes_data[0]["url"]
+    return nodes[0]["url"]
 
 # get the latest block count and store last block in the database
 def storeBlockInDB(block_index, nodeAPI=False):
@@ -105,7 +108,7 @@ def storeBlockTransactions(block):
                 except:
                     print("failed on transaction lookup")
                     # print(vin['txid'])
-                    return False
+                    return False, 0.0, 0.0
             t['vin_verbose'] = input_transaction_data
         if 'claims' in t:
             claim_transaction_data = []
