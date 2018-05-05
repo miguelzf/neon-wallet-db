@@ -7,6 +7,8 @@ from .db import db as blockchain_db
 from .util import MAINNET_SEEDS, TESTNET_SEEDS
 import time
 from .scripts import add_fees
+from pprint import pprint
+import traceback
 
 nodeAPI = os.environ.get('NODEAPI')
 appName = os.environ.get('APPNAME')
@@ -30,6 +32,7 @@ def getBlockCount(nodeAPI=False):
     return rpcRequest("getblockcount", [], nodeAPI)
 
 def checkSeeds():
+    print("checkSeeds")
     seed_list = MAINNET_SEEDS if net == "MainNet" else TESTNET_SEEDS
     seeds = []
     for test_rpc in seed_list:
@@ -53,6 +56,7 @@ def get_highest_node():
     if data == None:
         return None
     nodes_data = data["nodes"]
+    # print(nodes_data, file=sys.stderr)
     nodes = sorted([x for x in nodes_data if x["block_height"] != None], key=lambda x: (x["block_height"], -1*x["time"]), reverse=True)
     if len(nodes) == 0:
         return nodes_data[0]["url"]

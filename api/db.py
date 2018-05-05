@@ -3,11 +3,25 @@ import os
 import redis
 from rq import Queue
 
-MONGOUSER = os.environ.get('MONGOUSER')
-MONGOPASS = os.environ.get('MONGOPASS')
-MONGOURL = os.environ.get('MONGOURL')
-MONGOAPP = os.environ.get('MONGOAPP')
+#MONGOUSER = os.environ.get('MONGOUSER')
+#MONGOPASS = os.environ.get('MONGOPASS')
+#MONGOURL = os.environ.get('MONGOURL')
+#MONGOAPP = os.environ.get('MONGOAPP')
+
+MONGOYUSER="teste4"
+REDISTOGO_URL='http://localhost:6379'
+MONGOURL="127.0.0.1:27017"
+MONGOAPP="neonwallet"
+MONGOUSER="teste4"
+MONGOPASS="teste4"
+NET="MainNet"
+NODEAPI="https://localhost:20332"
+
+
 MONGOURL = "mongodb://{}:{}@{}/{}".format(MONGOUSER, MONGOPASS, MONGOURL, MONGOAPP)
+
+print(MONGOURL)
+print(MONGOAPP)
 
 client = MongoClient(MONGOURL)
 db = client[MONGOAPP]
@@ -17,7 +31,9 @@ db = client[MONGOAPP]
 
 # redis
 
-redis_url = os.environ.get('REDISTOGO_URL')
+#redis_url = os.environ.get('REDISTOGO_URL')
+redis_url = REDISTOGO_URL
+
 
 redis_db = redis.from_url(redis_url)
 
