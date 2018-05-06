@@ -25,6 +25,8 @@ def getBlock(index, nodeAPI=nodeAPI):
 def getBlockCount(nodeAPI=False):
     if nodeAPI == False:
         nodeAPI = get_highest_node()
+        if not nodeAPI:
+            return False
     return rpcRequest("getblockcount", [], nodeAPI)
 
 def checkSeeds():
@@ -47,7 +49,10 @@ def checkSeeds():
 
 # get the node with the highest block height
 def get_highest_node():
-    data = blockchain_db['meta'].find_one({"name":"node_status"})["nodes"]
+    data = blockchain_db['meta'].find_one({"name":"node_status"})
+    if data == None:
+        return None
+    nodes_data = data["nodes"]
     nodes = sorted([x for x in nodes_data if x["block_height"] != None], key=lambda x: (x["block_height"], -1*x["time"]), reverse=True)
     if len(nodes) == 0:
         return nodes_data[0]["url"]
@@ -57,6 +62,8 @@ def get_highest_node():
 def storeBlockInDB(block_index, nodeAPI=False):
     if not nodeAPI:
         nodeAPI = get_highest_node()
+        if not nodeAPI:
+            return False
     print("using {}".format(nodeAPI))
     data = getBlock(block_index, nodeAPI=nodeAPI)
     block_data = data["result"]
@@ -133,6 +140,8 @@ def storeBlockTransactions(block):
 
 def storeLatestBlockInDB():
     nodeAPI = get_highest_node()
+    if not nodeAPI:
+        return False
     print("updating latest block with {}".format(nodeAPI))
     currBlock = getBlockCount(nodeAPI=nodeAPI)["result"]
     print("current block {}".format(currBlock))

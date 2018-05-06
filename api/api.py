@@ -132,6 +132,8 @@ def nodes():
 def highest_node():
     nodes = meta_db.find_one({"name": "node_status"})["nodes"]
     highest_node = get_highest_node()
+    if not highest_node:
+         return 0
     return jsonify({"net": NET, "node": highest_node})
 
 def compute_sys_fee(block_index):
